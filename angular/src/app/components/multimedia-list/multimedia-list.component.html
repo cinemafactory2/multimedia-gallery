@@ -1,0 +1,110 @@
+<div class="row" style="display: flex; align-items: center;">
+  <div class="col-1"></div>
+  <div class="col-lg-3 col-md-4 col-12">
+    <div class="form-group mr-2 ml-2">
+      <label for="mediaType" class="text-bold col-form-label font-weight-bold">Media type:</label>
+      <select id="mediaType" class="form-control" [(ngModel)]="mediaType" (change)="showFilter()">
+        <option value="">All</option>
+        <option value="Audio">Audio</option>
+        <option value="Image">Image</option>
+        <option value="Video">Video</option>
+      </select>
+    </div>
+  </div>
+  <div class="col-lg-3 col-md-4 col-12">
+    <div class="form-group mr-2 ml-2">
+      <label for="category" class="text-bold col-form-label font-weight-bold">Category:</label>
+      <select id="category" class="form-control" [(ngModel)]="category" (change)="showFilter()">
+        <option value="">All</option>
+        <option *ngFor="let categoryOption of categories" value="{{categoryOption}}">{{categoryOption}}</option>
+      </select>
+    </div>
+  </div>
+  <div *ngIf="isAuthenticated" class="col-lg-4 text-right">
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle shadow m-3" type="button" id="dropdownMenuLoggedIn" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-user"></i>&nbsp;{{username}}
+      </button>
+      <div class="dropdown-menu dropdown-menu-right border border-secondary" aria-labelledby="dropdownMenuLoggedIn">
+        <!-- <a class="dropdown-item" href="/userDetails"><i class="fas fa-info-circle"></i>&nbsp;Profile</a> -->
+        <button class="dropdown-item" (click)="logOut()"><i class="fas fa-sign-out-alt"></i>&nbsp;Log out</button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isAuthenticated" class="col-12 text-center">
+    <a class="text-white btn btn-primary m-2 shadow" [routerLink]="['/addMultimedia']"><i class="fas fa-plus"></i>&nbsp;Add
+      multimedia
+    </a>
+  </div>
+
+  <div *ngIf="!isAuthenticated" class="col-lg-4 col-md-2 text-right">
+    <button type="button" class="text-white text-decoration-none btn btn-primary m-2 shadow" (click)="openLoginModal(loginModal)">
+      <i class="fas fa-sign-in-alt"></i>&nbsp;Sign in
+    </button>
+    <a class="text-white text-decoration-none btn btn-info m-2 shadow" (click)="openSignUpModal(signUpModal)">
+      <i class="fas fa-user-plus"></i>&nbsp;Sign up
+    </a>
+  </div>
+  <div class="col-1"></div>
+</div>
+
+<div *ngIf="!loading" class="row" style="display: flex; align-items: center;">
+
+  <div class="col-12">
+    <br />
+  </div>
+
+  <div *ngFor="let multimedia of multimediaList" class="col-md-4 col-sm-6 col-12 mb-4">
+    <div class="card mx-auto shadow" style="max-width: 18rem;" [ngClass]="{'border-dark': multimedia.type.typeId === 'Video', 'border-success': multimedia.type.typeId == 'Audio', 'border-info': multimedia.type.typeId == 'Image' }">
+      <div class="card-header"><i class="fas fa-video" [ngClass]="{'fas fa-video': multimedia.type.typeId === 'Video', 'far fa-file-audio': multimedia.type.typeId == 'Audio', 'fa fa-image':  multimedia.type.typeId == 'Image' }"></i></div>
+      <div class="card-body text-dark">
+
+        <div *ngIf="multimedia.type.typeId === 'Video' " class="embed-responsive embed-responsive-16by9"><video class="embed-responsive-item"
+            src="{{multimedia.url}}" allowfullscreen controls></video></div>
+
+        <div *ngIf="multimedia.type.typeId === 'Audio'" class="embed-responsive embed-responsive-16by9 bg-success">
+          <br />&nbsp;<i class="fas fa-music text-white"></i>
+        </div>
+
+
+        <div *ngIf="multimedia.type.typeId === 'Image'" class="container text-center">
+
+          <img *ngIf="!multimedia.imageFile || multimedia.imageFile === ''" src="{{multimedia.url}}" alt="{{multimedia.title}}"
+            height="180px" style="max-width: 100%;" />
+          <img *ngIf="multimedia.imageFile && multimedia.imageFile !== ''" src="/{{multimedia.imageFile}}" alt="{{multimedia.title}}"
+            height="180px" style="max-width: 100%;" />
+        </div>
+
+        <h5 class="card-title mt-2">{{multimedia.title}}</h5>
+        <p class="card-text">{{multimedia.author}} <br /> {{multimedia.creationDate}}</p>
+      </div>
+
+      <div class="card-footer text-center">
+        <button type="button" class="btn btn-outline-dark shadow-none" (click)="selectMultimedia(multimedia, multimediaDetailsModal)"><i
+            class="fas fa-eye"></i>&nbsp;{{multimedia.type.typeId}}
+          details</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 mb-4">
+    <br />
+  </div>
+</div>
+
+<div id="loadingContainer" *ngIf="loading" class="text-center">
+  <sk-chasing-dots [color]="success"></sk-chasing-dots>
+</div>
+
+<div bsModal #multimediaDetailsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="multimediaDetailsModal">
+  <app-multimedia-details [multimedia]="selectedMultimedia" [authenticated]="isAuthenticated" (closeModal)="closeModal($event)"></app-multimedia-details>
+</div>
+
+<div bsModal #loginModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="loginModal">
+  <app-login (closeModal)="closeModal($event)"></app-login>
+</div>
+
+<div bsModal #signUpModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="signUpModal">
+  <app-sign-up (closeModal)="closeModal($event)"></app-sign-up>
+</div>

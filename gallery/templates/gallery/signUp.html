@@ -1,0 +1,84 @@
+{% extends 'gallery/sign_up_form.html' %}
+{% block body %}
+<div class="content-section">
+    <form method="POST">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4" align="center"> Register
+            </legend>
+            {% for message in messages %}
+
+            <div class="alert alert-success">
+                <a class="close" href="#" data-dismiss="alert">×</a>
+
+                {{ message }}
+
+            </div>
+            {% endfor %}
+            <form action="/contact/" method="post">
+                {{ form.non_field_errors }}
+                <div class="fieldWrapper">
+                    <tag-name style="white-space:pre">&#9;&#9;&#9;</tag-name>
+                    <label for="id_username">
+                        <p style="font-weight:bold;">USERNAME</p>
+                    </label>
+                    <tag-name style="white-space:pre">&#9;&#9;&#9;&#9;</tag-name>
+                    {{ form.username }}
+                </div>
+                <div class="fieldWrapper">
+                    <tag-name style="white-space:pre">&#9;&#9;&#9;</tag-name>
+                    {{ form.password1.errors }}
+                    <label for="id_password1">
+                        <p style="font-weight:bold;">PASSWORD</p>
+                    </label>
+                    <tag-name style="white-space:pre">&#9;&#9;&#9;&#9;</tag-name>
+                    {{ form.password1 }}
+                </div>
+                <div class="fieldWrapper">
+                    <tag-name style="white-space:pre">&#9;&#9;&#9;</tag-name>
+                    {{ form.password2.errors }}
+                    <label for="id_password2">
+                        <p style="font-weight:bold;">CONFIRM PASSWORD</p>
+                    </label>
+                    <tag-name style="white-space:pre">&#9;</tag-name>
+                    {{ form.password2 }}
+                </div>
+                <div class="fieldWrapper">
+                    {{ form.first_name.errors }}
+                    <tag-name style="white-space:pre">&#9;&#9;&#9;</tag-name>
+                    <label for="id_email">
+                        <p style="font-weight:bold;">NAME</p>
+                    </label>
+                    <tag-name style="white-space:pre">&#9;&#9;&#9;&#9;</tag-name>
+                    {{ form.first_name }}
+                </div>
+                <div class="fieldWrapper">
+                    {{ form.last_name.errors }}
+                    <tag-name style="white-space:pre">&#9;&#9;&#9;</tag-name>
+                    <label for="id_email">
+                        <p style="font-weight:bold;">LAST NAME</p>
+                    </label>
+                    <tag-name style="white-space:pre">&#9;&#9;&#9;&#9;</tag-name>
+                    {{ form.last_name }}
+                </div>
+                <div class="fieldWrapper">
+                    <tag-name style="white-space:pre">&#9;&#9;&#9;</tag-name>
+                    {{ form.email.errors }}
+                    <label for="id_email">
+                        <p style="font-weight:bold;">EMAIL</p>
+                    </label>
+                    <tag-name style="white-space:pre">&#9;&#9;&#9;&#9;&#9;</tag-name>
+                    {{ form.email }}
+                </div>
+            </form>
+            <div class="form-group" align="center">
+                <button class="btn btn-outline-info" type="submit">Register</button>
+                <a href="/"><button type="button" class="btn btn-outline-danger">Cancel</button></a>
+                <div class="border-top pt-3">
+                    <small class="text-muted"> Already have an account? <a class="ml-2" href="/signIn">Sign In</a></small>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,98 @@
+<div class="container mt-5">
+  <div class="card shadow border border-dark">
+    <div class="card-body">
+      <div class="row mt-4">
+        <div class="col-3">
+          <a class="btn btn-secondary text-white" [routerLink]="['/']"><i class="fas fa-arrow-left"></i></a>
+        </div>
+        <div class="col-6 text-center">
+          <h3>Add new multimedia</h3>
+        </div>
+        <div class="col-12">
+          <hr />
+        </div>
+        <div class="col-12">
+          <form *ngIf="categories" (ngSubmit)="onAddMultimediaSubmit()" #addMultimediaForm="ngForm">
+
+            <div class="form-group">
+              <label for="type">Type</label>
+              <select class="form-control" id="type" required [(ngModel)]="multimedia.type_id" name="type" #type="ngModel"
+                [attr.disabled]="multimediaSubmit ? true : null">
+                <option *ngFor="let type of typesOption" [value]="type.id">{{type.name}}</option>
+              </select>
+              <div [hidden]="type.valid || type.pristine" class="alert alert-danger small">
+                Type is required
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="url">Url</label>
+              <input type="text" class="form-control" id="url" required [(ngModel)]="multimedia.url" name="url" #url="ngModel"
+                [attr.disabled]="multimediaSubmit ? true : null">
+              <div [hidden]="url.valid || url.pristine" class="alert alert-danger small">
+                Url is required
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="title">Title</label>
+              <input type="text" class="form-control" id="title" required [(ngModel)]="multimedia.title" name="title"
+                #title="ngModel" [attr.disabled]="multimediaSubmit ? true : null">
+              <div [hidden]="title.valid || title.pristine" class="alert alert-danger small">
+                Title is required
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="category">Category</label>
+              <select class="form-control" id="category" required [(ngModel)]="multimedia.category_id" name="category"
+                #category="ngModel" [attr.disabled]="multimediaSubmit ? true : null">
+                <option *ngFor="let category of categories" [value]="category.pk">{{category.fields.name}}</option>
+              </select>
+              <div [hidden]="category.valid || category.pristine" class="alert alert-danger small">
+                Category is required
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="author">Author</label>
+              <input type="text" class="form-control" id="author" required [(ngModel)]="multimedia.author" name="author"
+                #author="ngModel" [attr.disabled]="multimediaSubmit ? true : null">
+              <div [hidden]="author.valid || author.pristine" class="alert alert-danger small">
+                Author is required
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="country">Country</label>
+              <input type="text" class="form-control" id="country" required [(ngModel)]="multimedia.country" name="country"
+                #country="ngModel" [attr.disabled]="multimediaSubmit ? true : null">
+              <div [hidden]="country.valid || country.pristine" class="alert alert-danger small">
+                Country is required
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="city">City</label>
+              <input type="text" class="form-control" id="city" required [(ngModel)]="multimedia.city" name="city"
+                #city="ngModel" [attr.disabled]="multimediaSubmit ? true : null">
+              <div [hidden]="city.valid || city.pristine" class="alert alert-danger small">
+                City is required
+              </div>
+            </div>
+
+
+
+            <div class="text-center mt-2">
+              <button *ngIf="!multimediaSubmit" type="submit" class="btn btn-success" [disabled]="!addMultimediaForm.form.valid"><i
+                  class="fas fa-plus"></i>&nbsp;Add
+                multimedia</button>
+              <sk-chasing-dots *ngIf="multimediaSubmit" [color]="success"></sk-chasing-dots>
+            </div>
+          </form>
+          <sk-chasing-dots *ngIf="!categories" [color]="success"></sk-chasing-dots>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

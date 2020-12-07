@@ -1,0 +1,54 @@
+<div class="modal-dialog modal-md">
+  <div class="modal-content">
+    <div class="modal-header" id="mediaHeader">
+      <h4 class="modal-title text-center" id="mediaTitle">Register</h4>
+      <button type="button" class="close pull-right" (click)="close()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form #clipForm="ngForm" (ngSubmit)="onSubmit()" ngNativeValidate>
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" class="form-control" id="username" [(ngModel)]="register.username" name="username" [disabled]="registerLoadingForm ? true : null"
+            required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" class="form-control" id="password" [(ngModel)]="register.password" name="password"
+            [disabled]="registerLoadingForm ? true : null" required minlength="8">
+        </div>
+        <div class="form-group">
+          <label for="password2">Confirm password</label>
+          <input type="password" class="form-control" id="password2" [(ngModel)]="register.password2" name="password2"
+            [disabled]="registerLoadingForm ? true : null" required minlength="8">
+        </div>
+        <div class="form-group">
+          <label for="first_name">First name</label>
+          <input type="text" class="form-control" id="first_name" [(ngModel)]="register.first_name" name="first_name" [disabled]="registerLoadingForm ? true : null"
+            required>
+        </div>
+        <div class="form-group">
+          <label for="last_name">Last name</label>
+          <input type="text" class="form-control" id="last_name" [(ngModel)]="register.last_name" name="last_name" [disabled]="registerLoadingForm ? true : null"
+            required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" id="email" [(ngModel)]="register.email" name="email" [disabled]="registerLoadingForm ? true : null"
+            required>
+        </div>
+        <div *ngIf="registerFormError" class="alert alert-danger text-center" role="alert">
+          {{registerFormErrorMessage}}
+        </div>
+        <div class="text-center">
+          <button type="submit" *ngIf="!registerLoadingForm" class="btn btn-info m-2 shadow">Register</button>
+          <sk-chasing-dots *ngIf="registerLoadingForm" [color]="info"></sk-chasing-dots>
+          <button type="button" *ngIf="!registerLoadingForm" class="btn btn-danger m-2 shadow" (click)="close()">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>

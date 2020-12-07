@@ -1,0 +1,34 @@
+<div class="modal-dialog modal-sm">
+  <div class="modal-content">
+    <div class="modal-header" id="mediaHeader">
+      <h4 class="modal-title pull-left" id="mediaTitle">Sign in</h4>
+      <button type="button" class="close pull-right" (click)="close()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form #clipForm="ngForm" (ngSubmit)="onSubmit()" ngNativeValidate>
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" class="form-control" id="username" [(ngModel)]="login.username" name="username" [disabled]="loginLoadingForm ? true : null"
+            required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" class="form-control" id="password" [(ngModel)]="login.password" name="password"
+            [disabled]="loginLoadingForm ? true : null" required minlength="8">
+        </div>
+        <div *ngIf="loginFormError" class="alert alert-danger text-center" role="alert">
+          {{loginFormErrorMessage}}
+        </div>
+        <div class="text-center">
+          <button type="submit" *ngIf="!loginLoadingForm" class="btn btn-success"><i class="fas fa-sign-in-alt"></i>&nbsp;Sign
+            in</button>
+          <sk-chasing-dots *ngIf="loginLoadingForm" [color]="success"></sk-chasing-dots>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>

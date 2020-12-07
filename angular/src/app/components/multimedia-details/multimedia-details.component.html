@@ -1,0 +1,128 @@
+<div *ngIf="multimedia" class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header" id="mediaHeader">
+      <h4 class="modal-title pull-left" id="mediaTitle">{{ multimedia.title }}</h4>
+      <button type="button" class="close pull-right" (click)="close()" [disabled]="clipLoadingForm ? true : null"
+        aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <div class="modal-body" id="mediaBody">
+      <div *ngIf="multimedia.type.typeId === 'Video' " class="embed-responsive embed-responsive-16by9">
+        <video class="embed-responsive-item" id="mediaPlayer" src="{{urlToPlay}}" allowfullscreen controls #media
+          (loadedmetadata)="setDuration(media)"></video>
+      </div>
+
+      <div *ngIf="multimedia.type.typeId === 'Audio'" class="embed-responsive embed-responsive-16by9 mx-auto bg-success"
+        style="width:300px">
+        <br />&nbsp;
+        <audio controls id="mediaPlayer" #media (pla)="removeClip()" (loadedmetadata)="setDuration(media)" src="{{urlToPlay}}"></audio>
+      </div>
+      <div *ngIf="multimedia.type.typeId === 'Image'" class="container text-center">
+
+        <img *ngIf="!multimedia.imageFile || multimedia.imageFile === ''" src="{{multimedia.url}}" alt="{{multimedia.title}}"
+          width="300px" style="max-width: 100%;" />
+        <img *ngIf="multimedia.imageFile && multimedia.imageFile !== ''" src="/{{multimedia.imageFile}}" alt="{{multimedia.title}}"
+          width="300px" style="max-width: 100%;" />
+      </div>
+      <div *ngIf="selectedClip" class="alert alert-info mt-3" role="alert">
+        The media will be played (only one time) from second <b>{{selectedClip.fields.initialSec}}</b> to second <b>{{selectedClip.fields.finalSec}}</b>
+        when you
+        hit the play button
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="col-md-6 col-12">
+          <p><strong>Author:</strong> {{ multimedia.author }}</p>
+        </div>
+        <div class="col-md-6 col-12">
+          <p><strong>Creation Date:</strong> {{ multimedia.creationDate }}</p>
+        </div>
+        <div class="col-md-6 col-12">
+          <p><strong>Country:</strong> {{ multimedia.country }}</p>
+        </div>
+        <div class="col-md-6 col-12">
+          <p><strong>City:</strong> {{ multimedia.city }}</p>
+        </div>
+        <div class="col-md-6 col-12">
+          <p><strong>Category:</strong> {{ multimedia.category.name }}</p>
+        </div>
+        <div class="col-md-6 col-12">
+          <p><strong>Created By:</strong> {{ multimedia.user.username }}</p>
+        </div>
+      </div>
+      <ng-container *ngIf="loadedMetadata && (multimedia.type.typeId === 'Video' || multimedia.type.typeId === 'Audio')">
+
+        <ng-container>
+          <hr />
+          <h5 class="text-center mb-3">Suggested clips</h5>
+          <ng-container *ngIf="!loadingClips && clips">
+            <p class="text-center">Select a clip to play by clicking the button</p>
+            <ul class="list-group border border-dark shadow rounded mt-2 mb-4">
+              <li *ngIf="clips.length === 0" class="list-group-item text-center">
+                <h5>There are no suggested clips for this media. Please add one</h5>
+              </li>
+              <li *ngFor="let clip of clips" class="list-group-item">
+                <div class="row row-middle">
+                  <div class="col-sm-10 col-12">
+                    <h5>{{clip.fields.name}}</h5>
+                    {{clip.fields.initialSec}}s - {{clip.fields.finalSec}}s
+                  </div>
+                  <div class="col-sm-2 col-12 text-right">
+                    <button class="btn-primary btn shadow" (click)="playClip(clip)"><i class="fas fa-play"></i></button>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </ng-container>
+          <sk-chasing-dots *ngIf="loadingClips" [color]="success"></sk-chasing-dots>
+          <hr />
+        </ng-container>
+
+        <ng-container *ngIf="authenticated">
+          <h5 class="text-center">Add clip</h5>
+          <div *ngIf="clipSubmitSuccess" class="alert alert-success" role="alert">
+            The clip was saved!
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form #clipForm="ngForm" (ngSubmit)="onSubmit()" ngNativeValidate>
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" class="form-control" id="name" [(ngModel)]="clip.name" name="name" required [disabled]="clipLoadingForm ? true : null">
+            </div>
+            <div class="form-group">
+              <label for="name">Start second</label>
+              <input type="number" min="0" step="1" max="{{clip.finalSec - 1}}" class="form-control" [(ngModel)]="clip.initialSec"
+                name="initialSecond" id="initialSecond" [disabled]="clipLoadingForm ? true : null" required>
+            </div>
+            <div class="form-group">
+              <label for="name">End second</label>
+              <input type="number" min="{{clip.initialSec + 1}}" max="{{duration}}" step="1" class="form-control" id="finalSec"
+                name="finalSec" [(ngModel)]="clip.finalSec" [disabled]="clipLoadingForm ? true : null" required>
+            </div>
+            <div *ngIf="clipFormError" class="alert alert-danger" role="alert">
+              {{clipFormErrorMessage}}
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-success" *ngIf="!clipLoadingForm"><i class="fas fa-save"></i>&nbsp;Save
+                clip</button>
+              <sk-chasing-dots *ngIf="clipLoadingForm" [color]="success"></sk-chasing-dots>
+            </div>
+          </form>
+        </ng-container>
+
+      </ng-container>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" [disabled]="clipLoadingForm ? true : null" (click)="close()"><i
+          class="fas fa-times"></i>&nbsp;Close</button>
+    </div>
+  </div>
+</div>

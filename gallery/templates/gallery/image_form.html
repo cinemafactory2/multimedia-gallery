@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Add an image</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+
+<body>
+    <h4 class="center">Add a new image</h4>
+    <br />
+    <div class="container center">
+        {% block content %}
+        <form action="{% url 'images:addImage' %}" enctype="multipart/form-data" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <br />
+            <input class="btn waves-effect waves-light" type="submit" value="Add image">
+        </form>
+        {% endblock %}
+    </div>
+</body>
+
+</html>
